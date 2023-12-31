@@ -2,9 +2,11 @@ use std::{io::Write, path::PathBuf};
 
 pub mod error;
 mod scanner;
+mod syntax;
 
 use error::Result;
 use scanner::*;
+use syntax::*;
 
 pub fn run_file(path: impl Into<PathBuf>) -> Result<()> {
     let source = std::fs::read_to_string(path.into())?;
@@ -29,9 +31,11 @@ pub fn run_prompt() {
 fn run(source: String) -> Result<()> {
     let scanner = Scanner::new(source);
     let tokens = scanner.scan_tokens()?;
-    println!();
-    for token in tokens {
-        println!("{token}");
-    }
+    let parser = Parser::new(tokens);
+    let expr = parser.parse()?;
+    println!("{expr:#?}");
+    // for token in tokens {
+    //     println!("{token}");
+    // }
     Ok(())
 }

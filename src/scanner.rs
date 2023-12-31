@@ -52,7 +52,14 @@ pub enum TokenType {
     While,
 
     // Not a lexeme, but for parser simplicity
-    EOF,
+    Eof,
+}
+
+impl TokenType {
+    pub fn matches(&self, other: &Self) -> bool {
+        use std::mem::discriminant;
+        discriminant(self) == discriminant(other)
+    }
 }
 
 static KEYWORDS: phf::Map<&'static str, TokenType> = phf_map! {
@@ -74,10 +81,11 @@ static KEYWORDS: phf::Map<&'static str, TokenType> = phf_map! {
     "while" => TokenType::While,
 };
 
+#[derive(Clone, Debug)]
 pub struct Token {
-    ty: TokenType,
-    lexeme: String,
-    line: usize,
+    pub(crate) ty: TokenType,
+    pub(crate) lexeme: String,
+    pub(crate) line: usize,
 }
 
 impl Display for Token {
@@ -116,7 +124,7 @@ impl Scanner {
         }
 
         tokens.push(Token {
-            ty: TokenType::EOF,
+            ty: TokenType::Eof,
             lexeme: String::new(),
             line: self.line,
         });
