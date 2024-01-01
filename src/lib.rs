@@ -1,6 +1,7 @@
 use std::{io::Write, path::PathBuf};
 
 pub mod error;
+mod interpret;
 mod scanner;
 mod syntax;
 
@@ -33,9 +34,6 @@ fn run(source: String) -> Result<()> {
     let tokens = scanner.scan_tokens()?;
     let parser = Parser::new(tokens);
     let expr = parser.parse()?;
-    println!("{expr:#?}");
-    // for token in tokens {
-    //     println!("{token}");
-    // }
+    interpret::interpret(expr);
     Ok(())
 }

@@ -8,6 +8,8 @@ pub enum Error {
     IO(#[from] std::io::Error),
     #[error("[line {line}] Error: {message}")]
     Syntax { line: usize, message: &'static str },
+    #[error("[line {line}] Error: {message}")]
+    TypeError { line: usize, message: &'static str },
 }
 
 #[allow(dead_code)]
